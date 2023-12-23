@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html class="w-full h-full bg-black">
+  <head>
+    <title>Server-Sent Events Example</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="h-full w-full">
+    <h1 class="text-center text-gray-50 py-5">Server-Sent Events</h1>
+    <ul
+      id="sse-data"
+      class="space-y-2 text-teal-400 flex-grow p-3 bg-slate-900 text-center h-[650px] overflow-auto"
+    ></ul>
+
+    <form id="send-message" class="p-2">
+      <input type="text" id="message" name="message" class="w-full p-3 bg-gray-800 text-teal-400" />
+      <button type="submit">Send</button>
+    </form>
+
+    <script>
+      const room_id = 123;
+      const list = document.getElementById('sse-data');
+      const form = document.getElementById('send-message');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const data = new FormData(e.target);
+
+        data.append('id', room_id);
+
+        await fetch('/api/chat', {
+          method: 'POST',
+          body: JSON.stringify(Object.fromEntries(data.entries())),
+        });
+      });
+
+      const source = new EventSource(`/api/chat?id=${room_id}`);
+
+      source.addEventListener('message', function (event) {
+        const node = document.createElement('li');
+        node.setAttribute('data-event', event.lastEventId);
+        node.innerHTML = `<pre>${event.data}</pre>`;
+        list.appendChild(node);
+
+        requestAnimationFrame(() => {
+          list.scrollTop = list.scrollHeight;
+        });
+      });
+
+      source.addEventListener('presence', function (event) {
+        console.log('presence', event);
+      });
+
+      source.addEventListener('error', function (error) {
+        console.error('SSE Error:', error);
+        source.close();
+      });
+    </script>
+  </body>
+</html>

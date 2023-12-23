@@ -1,0 +1,13 @@
+{
+  "name": "farmako-assignment",
+  "private": true,
+  "type": "module",
+  "main": "./bin/index.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "node --watch ."
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
