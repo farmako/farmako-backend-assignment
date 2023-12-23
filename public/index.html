@@ -19,7 +19,10 @@
     </form>
 
     <script>
-      const room_id = 123;
+      const params = new URLSearchParams(window.location.search);
+
+      const room_id = params.get('id');
+
       const list = document.getElementById('sse-data');
       const form = document.getElementById('send-message');
 
@@ -39,9 +42,14 @@
       const source = new EventSource(`/api/chat?id=${room_id}`);
 
       source.addEventListener('message', function (event) {
+        const data = JSON.parse(event.data);
+
         const node = document.createElement('li');
+
         node.setAttribute('data-event', event.lastEventId);
-        node.innerHTML = `<pre>${event.data}</pre>`;
+
+        node.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+
         list.appendChild(node);
 
         requestAnimationFrame(() => {
