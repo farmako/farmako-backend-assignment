@@ -26,4 +26,4 @@ Here are the things that the application should do
 
 ## Help
 
-if you get stuck or have any questions, feel free to mail me at [sidharth.rathi@farmako.in](mailto:sidharth.rathi@farmako.in)
+if you get stuck or have any questions, feel free to mail me at [tech@farmako.ai](mailto:tech@farmako.ai)
